@@ -1,0 +1,71 @@
+---
+import type { Category, Publisher } from '../types/game';
+
+interface Props {
+    /** Available categories for the multi-select control. */
+    categories: Category[];
+    /** Available publishers for the single-select control. */
+    publishers: Publisher[];
+}
+
+const { categories, publishers } = Astro.props;
+---
+
+<form
+    class="mb-8 rounded-xl border border-slate-700 bg-slate-800/70 p-6 shadow-lg"
+    data-testid="game-filters"
+    aria-labelledby="filters-heading"
+>
+    <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
+        <h2 id="filters-heading" class="text-xl font-semibold text-slate-100">Filter games</h2>
+        <button
+            type="reset"
+            class="rounded-lg px-3 py-2 text-sm font-medium text-blue-300 transition-colors hover:bg-slate-700 hover:text-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            data-testid="clear-filters"
+        >
+            Clear filters
+        </button>
+    </div>
+
+    <div class="grid gap-5 md:grid-cols-2">
+        <div>
+            <label for="category-filter" class="mb-2 block text-sm font-medium text-slate-200">
+                Categories
+            </label>
+            <select
+                id="category-filter"
+                name="categories"
+                multiple
+                size={Math.min(Math.max(categories.length, 2), 5)}
+                class="min-h-24 w-full rounded-lg border border-slate-600 bg-slate-900 px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                data-testid="category-filter"
+            >
+                {categories.map((category) => (
+                    <option value={category.id}>{category.name}</option>
+                ))}
+            </select>
+            <p class="mt-2 text-xs text-slate-400">Select one or more categories.</p>
+        </div>
+
+        <div>
+            <label for="publisher-filter" class="mb-2 block text-sm font-medium text-slate-200">
+                Publisher
+            </label>
+            <select
+                id="publisher-filter"
+                name="publisher"
+                class="w-full rounded-lg border border-slate-600 bg-slate-900 px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                data-testid="publisher-filter"
+            >
+                <option value="">All publishers</option>
+                {publishers.map((publisher) => (
+                    <option value={publisher.id}>{publisher.name}</option>
+                ))}
+            </select>
+        </div>
+    </div>
+
+    <p class="mt-5 text-sm text-slate-300" role="status" aria-live="polite" data-testid="filter-results">
+        Showing all games
+    </p>
+</form>
